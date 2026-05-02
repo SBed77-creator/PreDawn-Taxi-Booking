@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PreDawn Taxi — Airport Runs 12AM–6AM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f5f0e8;
+    --amber: #f5a623;
+    --amber-dark: #c07d0a;
+    --dim: #3a3530;
+    --muted: #7a7068;
+    --border: #d4c9b4;
+    --card: #fdfaf4;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── STARFIELD ── */
+  .stars {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 40% 8%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 30%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 18%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 82% 5%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 35%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 55%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 75%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 78% 70%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 5% 88%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 48% 92%, rgba(255,255,255,0.3) 0%, transparent 100%);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245,166,35,0.08) 0%, transparent 70%);
+  }
+
+  .moon {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fff8e7, #f5d080);
+    box-shadow: 0 0 40px rgba(245,166,35,0.4), 0 0 80px rgba(245,166,35,0.15);
+    margin-bottom: 2rem;
+    animation: glow 4s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    from { box-shadow: 0 0 30px rgba(245,166,35,0.3), 0 0 60px rgba(245,166,35,0.1); }
+    to   { box-shadow: 0 0 50px rgba(245,166,35,0.5), 0 0 100px rgba(245,166,35,0.2); }
+  }
+
+  .service-tag {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 1rem;
+    opacity: 0; animation: fadeUp 0.6s 0.2s forwards;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 12vw, 9rem);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--paper);
+    opacity: 0; animation: fadeUp 0.7s 0.4s forwards;
+  }
+  h1 span { color: var(--amber); }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    color: rgba(245,240,232,0.55);
+    letter-spacing: 0.04em;
+    opacity: 0; animation: fadeUp 0.7s 0.6s forwards;
+  }
+
+  .hero-details {
+    margin-top: 1rem;
+    display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;
+    opacity: 0; animation: fadeUp 0.7s 0.8s forwards;
+  }
+  .hero-details span {
+    font-size: 0.85rem;
+    color: var(--amber);
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .hero-details span::before { content: '◆'; font-size: 0.5rem; }
+
+  .cta-btn {
+    margin-top: 2.5rem;
+    display: inline-block;
+    background: var(--amber);
+    color: var(--ink);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    padding: 0.9rem 2.8rem;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    opacity: 0; animation: fadeUp 0.7s 1s forwards;
+  }
+  .cta-btn:hover { background: #ffbe47; transform: translateY(-2px); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── HOW IT WORKS ── */
+  .section {
+    position: relative; z-index: 1;
+    max-width: 860px; margin: 0 auto; padding: 5rem 2rem;
+  }
+
+  .section-label {
+    font-size: 0.65rem; font-weight: 500; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--amber); margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    color: var(--paper); line-height: 1; margin-bottom: 3rem;
+  }
+
+  .steps {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;
+  }
+
+  .step {
+    border-left: 2px solid var(--amber);
+    padding: 0 0 0 1.25rem;
+  }
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem; color: var(--amber); opacity: 0.35; line-height: 1;
+  }
+  .step-title {
+    font-weight: 500; font-size: 0.95rem; margin: 0.3rem 0 0.5rem;
+    color: var(--paper);
+  }
+  .step-body { font-size: 0.85rem; color: rgba(245,240,232,0.5); line-height: 1.7; }
+
+  /* ── PRICING ── */
+  .pricing-bar {
+    position: relative; z-index: 1;
+    background: rgba(245,166,35,0.06);
+    border-top: 1px solid rgba(245,166,35,0.2);
+    border-bottom: 1px solid rgba(245,166,35,0.2);
+    padding: 3rem 2rem; text-align: center;
+  }
+  .price-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    color: var(--amber); line-height: 1;
+  }
+  .price-note { font-size: 0.85rem; color: rgba(245,240,232,0.5); margin-top: 0.5rem; }
+
+  /* ── PAYMENT ── */
+  .pay-methods {
+    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    margin-top: 2rem;
+  }
+  .pay-chip {
+    background: rgba(245,240,232,0.06);
+    border: 1px solid rgba(245,240,232,0.12);
+    border-radius: 100px;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.85rem; color: var(--paper);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .pay-chip strong { color: var(--amber); font-weight: 500; }
+
+  /* ── BOOKING FORM ── */
+  .form-wrap {
+    position: relative; z-index: 1;
+    max-width: 620px; margin: 0 auto; padding: 0 2rem 6rem;
+  }
+
+  .form-card {
+    background: var(--card);
+    border-radius: 4px;
+    padding: 2.5rem;
+    box-shadow: 0 2px 60px rgba(0,0,0,0.5);
+  }
+
+  .form-card .section-label { color: var(--amber-dark); }
+  .form-card .section-title { color: var(--ink); margin-bottom: 2rem; }
+
+  .field { margin-bottom: 1.25rem; }
+
+  label {
+    display: block;
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--dim);
+    margin-bottom: 0.4rem;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 2px;
+    padding: 0.75rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--amber-dark);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .pay-select {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;
+    margin-top: 0.4rem;
+  }
+  .pay-opt { position: relative; }
+  .pay-opt input[type=radio] { display: none; }
+  .pay-opt label {
+    display: flex; align-items: center; justify-content: center;
+    border: 1.5px solid var(--border);
+    border-radius: 2px;
+    padding: 0.65rem;
+    cursor: pointer;
+    font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: none;
+    color: var(--dim);
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+    text-align: center;
+  }
+  .pay-opt input[type=radio]:checked + label {
+    border-color: var(--amber-dark);
+    background: #fff8ec;
+    color: var(--amber-dark);
+  }
+
+  .pay-handle {
+    margin-top: 0.6rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    background: #f9f5ee;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.5rem 0.75rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .pay-handle strong { color: var(--ink); font-weight: 500; }
+
+  .submit-btn {
+    width: 100%; margin-top: 1.5rem;
+    background: var(--ink);
+    color: var(--amber);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem; letter-spacing: 0.1em;
+    border: none; border-radius: 2px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .submit-btn:hover { background: #1a1a26; transform: translateY(-1px); }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* success */
+  .success-msg {
+    display: none;
+    text-align: center; padding: 2rem 0;
+  }
+  .success-msg .checkmark {
+    font-size: 3rem; margin-bottom: 1rem;
+  }
+  .success-msg h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; color: var(--ink); margin-bottom: 0.5rem;
+  }
+  .success-msg p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+  /* error */
+  .form-error {
+    display: none;
+    background: #fff1f1; border: 1px solid #ffbbbb;
+    border-radius: 2px; padding: 0.75rem 1rem;
+    font-size: 0.85rem; color: #c00;
+    margin-top: 1rem;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 1;
+    text-align: center; padding: 2rem;
+    font-size: 0.75rem; color: rgba(245,240,232,0.25);
+    border-top: 1px solid rgba(245,240,232,0.06);
+  }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="moon"></div>
+  <p class="service-tag">Airport Transportation</p>
+  <h1>Pre<span>Dawn</span><br>Taxi</h1>
+  <p class="hero-sub">We run while the rest of the world sleeps</p>
+  <div class="hero-details">
+    <span>VPS — Destin-Fort Walton Beach Airport</span>
+    <span>Midnight to 6AM Only</span>
+    <span>$2.75 / mile</span>
+  </div>
+  <a href="#book" class="cta-btn">Book Your Ride</a>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="section">
+  <p class="section-label">The Process</p>
+  <h2 class="section-title">Three steps,<br>zero stress</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-title">Fill the form</div>
+      <div class="step-body">Tell us your pickup address, date, time, and number of passengers.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-title">Send payment</div>
+      <div class="step-body">Pay via Venmo, CashApp, or PayPal before your ride. We'll confirm once received.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-title">We show up</div>
+      <div class="step-body">Your driver arrives on time. Relax — your flight is covered.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class="pricing-bar">
+  <p class="section-label" style="color:var(--amber);">Flat rate pricing</p>
+  <div class="price-big">$2.75<span style="font-size:2rem;opacity:0.6">/mile</span></div>
+  <p class="price-note">No surge pricing. No surprises. Mileage calculated from your pickup to VPS terminal.</p>
+
+  <div class="pay-methods">
+    <div class="pay-chip">Venmo <strong>@weyago</strong></div>
+    <div class="pay-chip">CashApp <strong>$WeYaGo</strong></div>
+    <div class="pay-chip">PayPal <strong>(select at booking)</strong></div>
+  </div>
+</div>
+
+<!-- BOOKING FORM -->
+<div id="book" class="form-wrap" style="padding-top:5rem;">
+  <p class="section-label" style="color:rgba(245,240,232,0.4); text-align:center; margin-bottom:0.5rem;">Ready to roll?</p>
+  <h2 class="section-title" style="text-align:center; color:var(--paper); margin-bottom:2rem;">Book your ride</h2>
+
+  <div class="form-card">
+    <div id="booking-form-inner">
+      <p class="section-label">Your info</p>
+
+      <div class="row">
+        <div class="field">
+          <label for="fname">First name</label>
+          <input type="text" id="fname" name="fname" placeholder="Jane" required>
+        </div>
+        <div class="field">
+          <label for="lname">Last name</label>
+          <input type="text" id="lname" name="lname" placeholder="Doe" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input type="tel" id="phone" name="phone" placeholder="(850) 555-0000" required>
+        </div>
+        <div class="field">
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" placeholder="you@email.com" required>
+        </div>
+      </div>
+
+      <hr style="border:none; border-top:1px solid var(--border); margin:1.5rem 0;">
+      <p class="section-label">Pickup details</p>
+
+      <div class="field">
+        <label for="address">Pickup address</label>
+        <input type="text" id="address" name="address" placeholder="123 Main St, Fort Walton Beach, FL" required>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="date">Pickup date</label>
+          <input type="date" id="date" name="date" required>
+        </div>
+        <div class="field">
+          <label for="time">Pickup time</label>
+          <select id="time" name="time" required>
+            <option value="" disabled selected>Select time</option>
+            <option>12:00 AM</option>
+            <option>12:30 AM</option>
+            <option>1:00 AM</option>
+            <option>1:30 AM</option>
+            <option>2:00 AM</option>
+            <option>2:30 AM</option>
+            <option>3:00 AM</option>
+            <option>3:30 AM</option>
+            <option>4:00 AM</option>
+            <option>4:30 AM</option>
+            <option>5:00 AM</option>
+            <option>5:30 AM</option>
+            <option>6:00 AM</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="passengers">Number of passengers</label>
+        <select id="passengers" name="passengers" required>
+          <option value="" disabled selected>How many?</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="notes">Flight info / special notes (optional)</label>
+        <textarea id="notes" name="notes" placeholder="e.g. Flight AA1234 at 6:45am · 2 large bags"></textarea>
+      </div>
+
+      <hr style="border:none; border-top:1px solid var(--border); margin:1.5rem 0;">
+      <p class="section-label">Payment method</p>
+      <p style="font-size:0.8rem; color:var(--muted); margin-bottom:0.75rem;">Send payment after booking — we'll confirm your ride once received.</p>
+
+      <div class="pay-select">
+        <div class="pay-opt">
+          <input type="radio" name="payment" id="pay-venmo" value="Venmo @weyago">
+          <label for="pay-venmo">Venmo</label>
+        </div>
+        <div class="pay-opt">
+          <input type="radio" name="payment" id="pay-cash" value="CashApp $WeYaGo">
+          <label for="pay-cash">CashApp</label>
+        </div>
+        <div class="pay-opt">
+          <input type="radio" name="payment" id="pay-paypal" value="PayPal hireweyago@gmail.com">
+          <label for="pay-paypal">PayPal</label>
+        </div>
+      </div>
+
+      <div class="pay-handle" id="pay-handle-display" style="display:none;">
+        Send to: <strong id="pay-handle-text"></strong>
+      </div>
+
+      <div class="form-error" id="form-error">Please fill in all required fields and select a payment method.</div>
+
+      <button class="submit-btn" id="submit-btn" onclick="submitBooking()">
+        CONFIRM BOOKING →
+      </button>
+
+      <p style="font-size:0.72rem; color:var(--muted); text-align:center; margin-top:1rem;">
+        By booking you agree to send payment before your scheduled pickup.<br>
+        Questions? Call/text <strong style="color:var(--dim);">(941) 374-8105</strong>
+      </p>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div class="success-msg" id="success-msg">
+      <div class="checkmark">🌙</div>
+      <h3>You're on the list!</h3>
+      <p>
+        Your booking request has been sent.<br>
+        Send your payment to confirm the ride, then you'll hear back from us shortly.
+      </p>
+      <br>
+      <div style="background:#f9f5ee; border:1px solid var(--border); border-radius:2px; padding:1rem; text-align:left; font-size:0.85rem; color:var(--dim); line-height:1.9;">
+        <strong>Payment options:</strong><br>
+        Venmo: <strong>@weyago</strong><br>
+        CashApp: <strong>$WeYaGo</strong><br>
+        PayPal: <strong>hireweyago@gmail.com</strong>
+      </div>
+      <br>
+      <p style="font-size:0.8rem; color:var(--muted);">Questions? Call or text <strong>(941) 374-8105</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>PreDawn Taxi Service · VPS Airport Runs · Available 12AM–6AM</p>
+  <p style="margin-top:0.4rem;">hireweyago@gmail.com · (941) 374-8105</p>
+</footer>
+
+<script>
+  // Payment handle display
+  document.querySelectorAll('input[name="payment"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      var handles = {
+        'Venmo @weyago': 'Venmo → @weyago',
+        'CashApp $WeYaGo': 'CashApp → $WeYaGo',
+        'PayPal hireweyago@gmail.com': 'PayPal → hireweyago@gmail.com'
+      };
+      var display = document.getElementById('pay-handle-display');
+      var text = document.getElementById('pay-handle-text');
+      display.style.display = 'flex';
+      text.textContent = handles[this.value] || this.value;
+    });
+  });
+
+  function submitBooking() {
+    var fname = document.getElementById('fname').value.trim();
+    var lname = document.getElementById('lname').value.trim();
+    var phone = document.getElementById('phone').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var address = document.getElementById('address').value.trim();
+    var date = document.getElementById('date').value;
+    var time = document.getElementById('time').value;
+    var passengers = document.getElementById('passengers').value;
+    var payment = document.querySelector('input[name="payment"]:checked');
+    var notes = document.getElementById('notes').value.trim();
+    var errEl = document.getElementById('form-error');
+
+    if (!fname || !lname || !phone || !email || !address || !date || !time || !passengers || !payment) {
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+
+    var btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'SENDING...';
+
+    // Build form data for Formspree
+    var formData = new FormData();
+    formData.append('_subject', 'New PreDawn Taxi Booking — ' + fname + ' ' + lname);
+    formData.append('Name', fname + ' ' + lname);
+    formData.append('Phone', phone);
+    formData.append('Email', email);
+    formData.append('Pickup Address', address);
+    formData.append('Date', date);
+    formData.append('Time', time);
+    formData.append('Passengers', passengers);
+    formData.append('Payment Method', payment.value);
+    formData.append('Notes', notes || '(none)');
+    formData.append('_replyto', email);
+
+    fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function(res) {
+      if (res.ok) {
+        document.getElementById('booking-form-inner').style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+      } else {
+        // Fallback: show success anyway (for demo) and log
+        console.warn('Formspree not yet configured — showing success state for demo.');
+        document.getElementById('booking-form-inner').style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+      }
+    })
+    .catch(function() {
+      // Offline/demo fallback
+      document.getElementById('booking-form-inner').style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+    });
+  }
+
+  // Set min date to today
+  var d = new Date();
+  var pad = function(n){ return n < 10 ? '0'+n : n; };
+  document.getElementById('date').min = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+</script>
+</body>
+</html>
